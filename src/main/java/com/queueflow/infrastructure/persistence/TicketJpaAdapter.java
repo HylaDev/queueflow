@@ -30,4 +30,9 @@ public class TicketJpaAdapter
 
         return Optional.empty();
     }
+
+    @Override
+    public boolean existsByCode(String code) {
+        return false;
+    }
 }
