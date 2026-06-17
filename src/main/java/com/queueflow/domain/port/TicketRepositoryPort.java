@@ -8,4 +8,6 @@ import java.util.UUID;
 public interface TicketRepositoryPort {
     Ticket save(Ticket ticket);
     Optional<Ticket> findById(UUID id);
+    boolean existsByCode(String code);
+
 }
