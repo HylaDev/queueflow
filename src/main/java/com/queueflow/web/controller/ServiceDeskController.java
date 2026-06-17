@@ -12,14 +12,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/v1/service-desks")
 @Tag(
         name = "Service Desk",
-        description = "Service Desk management API"
+        description = "Gestion d'un service"
 )
 public class ServiceDeskController {
 
@@ -31,7 +33,7 @@ public class ServiceDeskController {
         this.serviceDeskService = serviceDeskService;
     }
 
-    @PostMapping
+    @PostMapping("/api/v1/service-desks")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(
             summary = "Créer un service",
@@ -64,18 +66,47 @@ public class ServiceDeskController {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public ServiceDeskResponse create(
-            @Valid
-            @RequestBody
-            CreateServiceDeskRequest request) {
+    public ServiceDeskResponse create(@Valid @RequestBody CreateServiceDeskRequest request) {
 
-        ServiceDesk serviceDesk =
-                toDomain(request);
+        ServiceDesk serviceDesk = toDomain(request);
 
-        ServiceDesk created =
-                serviceDeskService.create(serviceDesk);
+        ServiceDesk created = serviceDeskService.create(serviceDesk);
 
         return toResponse(created);
+    }
+
+    @GetMapping("/api/v1/service-desks")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Lister les services",
+            description = " Retourne la liste des services. Possibilité de filtrer les services actifs ou inactifs")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Liste récupérer avec succès"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description =
+                            "Erreur interne du serveur",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    public List<ServiceDeskResponse> getServiceDesk(
+            @io.swagger.v3.oas.annotations.Parameter(
+                    description =
+                            "Filtre sur l'état du service (true = actif, false = inactif)",
+                    example = "true"
+            )
+            @RequestParam(required = false)
+            Boolean active){
+
+        return serviceDeskService
+                .getServiceDesks(active)
+                .stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     private ServiceDesk toDomain(

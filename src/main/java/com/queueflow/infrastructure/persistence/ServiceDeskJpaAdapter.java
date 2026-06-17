@@ -5,6 +5,7 @@ import com.queueflow.domain.port.ServiceDeskRepositoryPort;
 import com.queueflow.infrastructure.persistence.entity.ServiceDeskEntity;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,6 +31,25 @@ public class ServiceDeskJpaAdapter implements ServiceDeskRepositoryPort {
     public Optional<ServiceDesk> findById(UUID id) {
         return repository.findById(id)
                 .map(this::mapToDomain);
+    }
+
+    @Override
+    public List<ServiceDesk> findAll() {
+
+        return repository.findAll()
+                .stream()
+                .map(this::mapToDomain)
+                .toList();
+    }
+
+    @Override
+    public List<ServiceDesk> findAllByActive(
+            Boolean active) {
+
+        return repository.findByActive(active)
+                .stream()
+                .map(this::mapToDomain)
+                .toList();
     }
 
     @Override
