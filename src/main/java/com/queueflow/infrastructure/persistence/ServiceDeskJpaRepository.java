@@ -4,10 +4,12 @@ import com.queueflow.infrastructure.persistence.entity.ServiceDeskEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface ServiceDeskJpaRepository  extends
         JpaRepository<ServiceDeskEntity, UUID> {
     boolean existsByCode(String code);
+    List<ServiceDeskEntity> findByActive(Boolean active);
 
 }
