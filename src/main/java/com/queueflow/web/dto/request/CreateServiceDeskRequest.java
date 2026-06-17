@@ -2,9 +2,7 @@ package com.queueflow.web.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-@Schema(
-        description = "Demande de création d'un service"
-)
+
 public record CreateServiceDeskRequest(
 
         @Schema(

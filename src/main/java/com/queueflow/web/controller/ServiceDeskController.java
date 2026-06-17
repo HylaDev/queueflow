@@ -3,8 +3,13 @@ package com.queueflow.web.controller;
 import com.queueflow.application.service.ServiceDeskService;
 import com.queueflow.domain.model.ServiceDesk;
 import com.queueflow.web.dto.request.CreateServiceDeskRequest;
+import com.queueflow.web.dto.response.ErrorResponse;
 import com.queueflow.web.dto.response.ServiceDeskResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -29,11 +34,39 @@ public class ServiceDeskController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(
-            summary = "Create a service desk",
-            description = "Creates a new service desk"
-    )
+            summary = "Créer un service",
+            description = "Permet de créer un nouveau service accessible aux usagers.")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Service créé avec succès"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Données invalides",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description =
+                            "Un service avec ce code existe déjà",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description =
+                            "Erreur interne du serveur",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)))
+    })
     public ServiceDeskResponse create(
-            @Valid @RequestBody
+            @Valid
+            @RequestBody
             CreateServiceDeskRequest request) {
 
         ServiceDesk serviceDesk =

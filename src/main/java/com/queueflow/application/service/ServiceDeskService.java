@@ -6,6 +6,8 @@ import com.queueflow.domain.port.ServiceDeskRepositoryPort;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+
 @Service
 public class ServiceDeskService {
 
@@ -22,6 +24,10 @@ public class ServiceDeskService {
 
         validateBusinessRules(serviceDesk);
 
+        serviceDesk.setActive(true);
+        serviceDesk.setCreatedAt(Instant.now());
+        serviceDesk.setUpdatedAt(Instant.now());
+
         return repositoryPort.save(serviceDesk);
     }
 
@@ -31,8 +37,8 @@ public class ServiceDeskService {
         if (repositoryPort.existsByCode(
                 serviceDesk.getCode())) {
 
-            throw new ServiceDeskAlreadyExistsException(
-                    serviceDesk.getCode());
+            throw new ServiceDeskAlreadyExistsException(serviceDesk.getCode());
         }
     }
+
 }
