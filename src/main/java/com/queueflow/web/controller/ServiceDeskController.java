@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -93,7 +92,7 @@ public class ServiceDeskController {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public List<ServiceDeskResponse> getServiceDesk(
+    public List<ServiceDeskResponse> getServiceDesks(
             @io.swagger.v3.oas.annotations.Parameter(
                     description =
                             "Filtre sur l'état du service (true = actif, false = inactif)",
